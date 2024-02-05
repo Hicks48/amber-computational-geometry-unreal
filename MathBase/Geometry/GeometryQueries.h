@@ -9,7 +9,7 @@
 
 namespace AmberScience::MathBase::Geometry::GeometryQueries {
 
-	std::pair<Circle, Circle> CircleFromCircumferencePointTangentAndRadious(const FVector2D& circumferencePoint, const FVector2D& tangent, const float radious);
+	std::pair<Circle, Circle> CircleFromCircumferencePointTangentAndRadius(const FVector2D& circumferencePoint, const FVector2D& tangent, const float radius);
 
 	AmberScience::MathBase::Trigonometry::UnitCircle::RotationDirection GetRotationDirection(const FVector2D& tangent, const FVector2D& circumferencePoint, const FVector2D& circleCenter);
 }

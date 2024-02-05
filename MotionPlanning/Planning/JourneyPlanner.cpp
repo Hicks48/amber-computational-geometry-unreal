@@ -35,7 +35,7 @@ namespace {
         auto fromStartToMidpoint = 0.5F * turningBaseToTurningBase;
         auto fromEndToMidpoint = -0.5F * turningBaseToTurningBase;
 
-        auto cosine = startTurningBase.GetRadious() / fromStartToMidpoint.Length();
+        auto cosine = startTurningBase.GetRadius() / fromStartToMidpoint.Length();
 
         // Cosine should always be between -1 and 1. If it is not then return null to indicate that trajectory is not valid.
         if (cosine > 1.0F || cosine < -1.0F) {
@@ -45,14 +45,14 @@ namespace {
         auto alpha = std::acos(cosine);
 
         return std::make_shared<Straight>(
-            startTurningBase.GetCenter() + startTurningBase.GetRadious() * VectorTransformations::RotateVector(fromStartToMidpoint.GetSafeNormal(), -1.0F * static_cast<std::int32_t>(initialRotationDirection) * alpha),
-            endTurningBase.GetCenter() + endTurningBase.GetRadious() * VectorTransformations::RotateVector(fromEndToMidpoint.GetSafeNormal(), -1.0F * static_cast<std::int32_t>(initialRotationDirection) * alpha)
+            startTurningBase.GetCenter() + startTurningBase.GetRadius() * VectorTransformations::RotateVector(fromStartToMidpoint.GetSafeNormal(), -1.0F * static_cast<std::int32_t>(initialRotationDirection) * alpha),
+            endTurningBase.GetCenter() + endTurningBase.GetRadius() * VectorTransformations::RotateVector(fromEndToMidpoint.GetSafeNormal(), -1.0F * static_cast<std::int32_t>(initialRotationDirection) * alpha)
         );
     }
 
     std::shared_ptr<Straight> CalculateStraightTrajectoryBetweenTurningBases(const Circle& startTurningBase, const Circle& endTurningBase, const UnitCircle::RotationDirection initialRotationDirection) {
         auto turningBaseToTurningBase = endTurningBase.GetCenter() - startTurningBase.GetCenter();
-        auto fromCenterToIntersection = startTurningBase.GetRadious() * -1.0F * static_cast<std::int32_t>(initialRotationDirection) * turningBaseToTurningBase.GetRotated(90.0F).GetSafeNormal();
+        auto fromCenterToIntersection = startTurningBase.GetRadius() * -1.0F * static_cast<std::int32_t>(initialRotationDirection) * turningBaseToTurningBase.GetRotated(90.0F).GetSafeNormal();
 
         return std::make_shared<Straight>(
             startTurningBase.GetCenter() + fromCenterToIntersection,
@@ -129,7 +129,7 @@ namespace {
         auto fromStartToEnd = end.Position - start.Position;
 
         // If the distance between start and end is more than 4 x turning base radius then the CCC path can not be shortest and can skip.
-        if (fromStartToEnd.Length() > 4.0F * startTurningBase.GetRadious()) {
+        if (fromStartToEnd.Length() > 4.0F * startTurningBase.GetRadius()) {
             return std::nullopt;
         }
 
@@ -145,11 +145,11 @@ namespace {
         // Calculate the center of the middle circle in the CCC path and create the middle circle.
         auto fromStartTurningBaseCenterToEndTurningBaseCenter = endTurningBase.GetCenter() - startTurningBase.GetCenter();
 
-        auto angleBetweenStartToEndAndStartToMiddleCircle = std::acos((0.5F * fromStartTurningBaseCenterToEndTurningBaseCenter.Length()) / (2 * startTurningBase.GetRadious()));
-        auto fromStartToCenterOfMiddleCircle = 2 * startTurningBase.GetRadious() * VectorTransformations::RotateVector(fromStartTurningBaseCenterToEndTurningBaseCenter.GetSafeNormal(), angleBetweenStartToEndAndStartToMiddleCircle);
+        auto angleBetweenStartToEndAndStartToMiddleCircle = std::acos((0.5F * fromStartTurningBaseCenterToEndTurningBaseCenter.Length()) / (2 * startTurningBase.GetRadius()));
+        auto fromStartToCenterOfMiddleCircle = 2 * startTurningBase.GetRadius() * VectorTransformations::RotateVector(fromStartTurningBaseCenterToEndTurningBaseCenter.GetSafeNormal(), angleBetweenStartToEndAndStartToMiddleCircle);
         auto centerOfThirdCircle = startTurningBase.GetCenter() + fromStartToCenterOfMiddleCircle;
 
-        auto middleCircle = Circle{ startTurningBase.GetRadious(), centerOfThirdCircle };
+        auto middleCircle = Circle{ startTurningBase.GetRadius(), centerOfThirdCircle };
 
         // Calculate intersections between the three circles.
         auto startToMiddleCrossPoint = startTurningBase.GetCenter() + 0.5F * (middleCircle.GetCenter() - startTurningBase.GetCenter());
@@ -194,7 +194,7 @@ namespace {
         // The vectrors from center to end, from center to tangent point and from tangent point to end form a right triangle.
         // The angle between the vector from center to end and from center to tangent point is 90 degrees.
         // The angle alpha angle between the vectors from center to end and center to tangent is arc cosine of the ratio of the length of the two vectors.
-        auto alpha = std::acos(startTurningBase.GetRadious() / fromTurningBaseToEnd.Length());
+        auto alpha = std::acos(startTurningBase.GetRadius() / fromTurningBaseToEnd.Length());
 
         // Calculate unit circle angle for the tangent point by getting the angle of the vector from center to end and rotating it by alpha against the rotation direction.
         auto centerToEndAngle = UnitCircle::VectorToAngle(fromTurningBaseToEnd);
@@ -209,7 +209,7 @@ namespace {
         );
 
         // Calculate the tangent point.
-        auto tangentPoint = UnitCircle::AngleToVector(tangentPointAngle) * startTurningBase.GetRadious() + startTurningBase.GetCenter();
+        auto tangentPoint = UnitCircle::AngleToVector(tangentPointAngle) * startTurningBase.GetRadius() + startTurningBase.GetCenter();
 
         // Create straight from the tangent to the end point.
         auto straight = std::make_shared<Straight>(tangentPoint, end);
@@ -222,7 +222,7 @@ namespace {
 namespace AmberScience::MotionPlanning {
     Journey Plan(const MovementConfiguration& start, const FVector2D& end, const MovementConstraints& constraints) {
         // Get turning bases for both turn directions from the start configuration.
-        auto [startLeftTurningBase, startRightTurningBase] = GeometryQueries::CircleFromCircumferencePointTangentAndRadious(start.Position, start.Heading, constraints.TurningRadious);
+        auto [startLeftTurningBase, startRightTurningBase] = GeometryQueries::CircleFromCircumferencePointTangentAndRadius(start.Position, start.Heading, constraints.TurningRadius);
 
         // For both turning bases calculate the distance for the journey to the end point.
         auto leftTurningBaseJourney = CalculateCSPath(start, end, startLeftTurningBase);
@@ -234,8 +234,8 @@ namespace AmberScience::MotionPlanning {
 
     Journey Plan(const MovementConfiguration& start, const MovementConfiguration& end, const MovementConstraints& constraints) {
         // Compute all turning base combinations.
-        auto [startLeftTurningBase, startRightTurningBase] = GeometryQueries::CircleFromCircumferencePointTangentAndRadious(start.Position, start.Heading, constraints.TurningRadious);
-        auto [endLeftTurningBase, endRightTurningBase] = GeometryQueries::CircleFromCircumferencePointTangentAndRadious(end.Position, end.Heading, constraints.TurningRadious);
+        auto [startLeftTurningBase, startRightTurningBase] = GeometryQueries::CircleFromCircumferencePointTangentAndRadius(start.Position, start.Heading, constraints.TurningRadius);
+        auto [endLeftTurningBase, endRightTurningBase] = GeometryQueries::CircleFromCircumferencePointTangentAndRadius(end.Position, end.Heading, constraints.TurningRadius);
 
         // Calculate correct path option based on travel direction of start and end configuration on their respective turning bases.
         auto dubinsCurves = std::vector<std::optional<Journey>>{

@@ -3,6 +3,6 @@
 namespace AmberScience::MotionPlanning {
 	
 	struct MovementConstraints {
-		float TurningRadious = 1.0F;
+		float TurningRadius = 1.0F;
 	};
 }

@@ -7,7 +7,7 @@
 namespace AmberScience::MathBase::Trigonometry::UnitCircle {
     
     FVector2D AngleToVector(const float angleRad) {
-        return FVector2D{std::cos(angleRad), std::sin(angleRad)};
+        return FVector2D{ std::cos(angleRad), std::sin(angleRad) };
     }
 
     float VectorToAngle(const FVector2D& vector) {

@@ -7,7 +7,7 @@ namespace AmberScience::MathBase::Geometry {
 	class Circle {
 		public:
 			Circle();
-			Circle(const float radious, const FVector2D& center);
+			Circle(const float radius, const FVector2D& center);
 			~Circle() = default;
 
 			float GetPerimiter() const;
@@ -15,10 +15,10 @@ namespace AmberScience::MathBase::Geometry {
 			float GetDeltaArc(const float deltaAngleRad) const;
 			FVector2D GetCircumferencePoint(const float angleRad) const;
 			FVector2D GetCenter() const;
-			float GetRadious() const;
+			float GetRadius() const;
 
 		private:
-			float radious;
+			float radius;
 			FVector2D center;
 	};
 }

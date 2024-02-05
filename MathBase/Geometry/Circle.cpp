@@ -8,31 +8,31 @@ using namespace AmberScience::MathBase::Trigonometry;
 
 namespace AmberScience::MathBase::Geometry {
 	
-	Circle::Circle() : radious(1.0F), center(FVector2D::ZeroVector) {}
+	Circle::Circle() : radius(1.0F), center(FVector2D::ZeroVector) {}
 
-	Circle::Circle(const float radious, const FVector2D& center) : radious(radious), center(center) {}
+	Circle::Circle(const float radius, const FVector2D& center) : radius(radius), center(center) {}
 
 	float Circle::GetPerimiter() const {
-		return UnitCircle::FullCircle * this->radious;
+		return UnitCircle::FullCircle * this->radius;
 	}
 
 	float Circle::GetDeltaAngleRad(const float deltaArc) const {
-		return deltaArc / this->radious;
+		return deltaArc / this->radius;
 	}
 
 	float Circle::GetDeltaArc(const float deltaAngleRad) const {
-		return deltaAngleRad * this->radious;
+		return deltaAngleRad * this->radius;
 	}
 
 	FVector2D Circle::GetCircumferencePoint(const float angleRad) const {
-		return this->center + this->radious * UnitCircle::AngleToVector(angleRad);
+		return this->center + this->radius * UnitCircle::AngleToVector(angleRad);
 	}
 
 	FVector2D Circle::GetCenter() const {
 		return this->center;
 	}
 
-	float Circle::GetRadious() const {
-		return this->radious;
+	float Circle::GetRadius() const {
+		return this->radius;
 	}
 }
