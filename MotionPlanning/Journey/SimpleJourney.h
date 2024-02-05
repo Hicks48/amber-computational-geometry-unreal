@@ -18,6 +18,8 @@ namespace AmberScience::MotionPlanning {
 			float GetRemainingDistance() const;
 			float GetLength() const;
 
+			std::shared_ptr<const Trajectories::ITrajectory> GetTrajectory() const;
+
 			MovementConfiguration Advance(const float deltaDistance);
 
 		private:

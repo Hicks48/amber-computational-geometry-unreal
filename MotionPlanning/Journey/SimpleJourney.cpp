@@ -53,4 +53,8 @@ namespace AmberScience::MotionPlanning {
 		this->currentDistanceOnTrajectory = std::min(this->currentDistanceOnTrajectory + deltaDistance, this->trajectory->GetLength());
 		return this->trajectory->GetMovementConfiguration(this->currentDistanceOnTrajectory);
 	}
+
+	std::shared_ptr<const ITrajectory> SimpleJourney::GetTrajectory() const {
+		return this->trajectory;
+	}
 }

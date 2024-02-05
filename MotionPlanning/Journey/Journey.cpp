@@ -27,7 +27,7 @@ namespace AmberScience::MotionPlanning {
 	float Journey::GetLength() const {
 		auto length = 0.0F;
 		
-		for (const SimpleJourney& simpleJourney : this->simpleJourneys) {
+		for (const auto& simpleJourney : this->simpleJourneys) {
 			length += simpleJourney.GetLength();
 		}
 
@@ -63,9 +63,9 @@ namespace AmberScience::MotionPlanning {
 			return MovementConfiguration{};
 		}
 
-		auto currentSimpleJourney = this->simpleJourneys[this->currentJourneyIndex];
+		auto& currentSimpleJourney = this->simpleJourneys[this->currentJourneyIndex];
 
-		bool isOverCurrentJourney = currentSimpleJourney.GetRemainingDistance() < deltaDistance;
+		auto isOverCurrentJourney = currentSimpleJourney.GetRemainingDistance() < deltaDistance;
 		if (!isOverCurrentJourney) {
 			return currentSimpleJourney.Advance(deltaDistance);
 		}
